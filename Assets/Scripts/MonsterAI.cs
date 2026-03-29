@@ -46,7 +46,7 @@ public class MonsterAI : MonoBehaviour
 
     private NavMeshAgent agent;
     private CapsuleCollider capsule;
-    private MonsterState currentState = MonsterState.FollowPlayer;
+    [SerializeField] private MonsterState currentState = MonsterState.FollowPlayer;
     private bool arrivedAtLocation = false;
 
     // Target scale values for the current state
@@ -66,6 +66,9 @@ public class MonsterAI : MonoBehaviour
         targetModelScale = defaultModelScale;
         targetCapsuleRadius = defaultCapsuleRadius;
         targetCapsuleHeight = defaultCapsuleHeight;
+
+        // Reset any stale destination saved in the scene
+        agent.ResetPath();
 
         if (playerTarget == null)
         {
@@ -165,7 +168,7 @@ public class MonsterAI : MonoBehaviour
                 targetModelScale = defaultModelScale;
                 targetCapsuleRadius = defaultCapsuleRadius;
                 targetCapsuleHeight = defaultCapsuleHeight;
-                agent.stoppingDistance = GetComponent<NavMeshAgent>().stoppingDistance; // keep existing
+                agent.ResetPath();
                 break;
             case MonsterState.GoToLocationA:
                 targetModelScale = locationAModelScale;

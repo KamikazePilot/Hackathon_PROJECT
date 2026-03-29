@@ -651,6 +651,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 667049780}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &573901377
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 573901379}
+  - component: {fileID: 573901378}
+  m_Layer: 0
+  m_Name: MonsterStateUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &573901378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573901377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d08ce634c52fe8b8d9a18129c8fa6d30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterStateUI
+  monster: {fileID: 727665067}
+--- !u!4 &573901379
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 573901377}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 34.15595, y: 0.771, z: 126.52415}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &623804771 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 453084650579209855, guid: 035bf1ba97d19214580cfe6f5a29fdc3, type: 3}
@@ -827,7 +872,7 @@ GameObject:
   - component: {fileID: 727665073}
   m_Layer: 0
   m_Name: Monster
-  m_TagString: Untagged
+  m_TagString: Monster
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -845,7 +890,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterAI
   playerTarget: {fileID: 0}
+  modelChild: {fileID: 1490713206}
   detectionRange: 40
+  locationA: {fileID: 854679558}
+  locationAModelScale: {x: 2, y: 1, z: 2}
+  locationACapsuleRadius: 1
+  locationACapsuleHeight: 2
+  locationB: {fileID: 1386720097}
+  locationBModelScale: {x: 2, y: 1, z: 2}
+  locationBCapsuleRadius: 1
+  locationBCapsuleHeight: 2
+  scaleSpeed: 2
+  currentState: 0
 --- !u!195 &727665068
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -3166,3 +3222,4 @@ SceneRoots:
   - {fileID: 141029198}
   - {fileID: 667049780}
   - {fileID: 986130772}
+  - {fileID: 573901379}
