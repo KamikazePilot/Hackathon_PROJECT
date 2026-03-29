@@ -33,6 +33,12 @@ public class PlayerPickup : MonoBehaviour
             return;
         }
 
+        if (holdPoint == null)
+        {
+            Debug.LogError("HoldPoint is not assigned.");
+            return;
+        }
+
         Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
         RaycastHit hit;
 
@@ -42,7 +48,14 @@ public class PlayerPickup : MonoBehaviour
         {
             Debug.Log("Raycast hit: " + hit.collider.name);
 
+            // IMPORTANT: look on the hit object AND its parent
             PickupItem item = hit.collider.GetComponent<PickupItem>();
+
+            if (item == null)
+            {
+                item = hit.collider.GetComponentInParent<PickupItem>();
+            }
+
             if (item == null)
             {
                 Debug.Log("Hit object is not a pickup item.");
@@ -64,6 +77,15 @@ public class PlayerPickup : MonoBehaviour
             {
                 col.enabled = false;
             }
+            else
+            {
+                // If collider is on a child instead of the root
+                Collider childCol = heldItem.GetComponentInChildren<Collider>();
+                if (childCol != null)
+                {
+                    childCol.enabled = false;
+                }
+            }
 
             heldItem.transform.SetParent(holdPoint);
             heldItem.transform.localPosition = Vector3.zero;
@@ -81,21 +103,36 @@ public class PlayerPickup : MonoBehaviour
     {
         if (heldItem == null) return;
 
-        heldItem.transform.SetParent(null);
-        heldItem.transform.position = holdPoint.position + Camera.main.transform.forward * 1f;
+        PickupItem itemToDrop = heldItem;
+        heldItem = null;
 
-        Collider col = heldItem.GetComponent<Collider>();
+        itemToDrop.transform.SetParent(null);
+
+        Vector3 dropPosition = transform.position + transform.forward * 1.5f + Vector3.up * 0.5f;
+        itemToDrop.transform.position = dropPosition;
+
+        Collider col = itemToDrop.GetComponent<Collider>();
         if (col != null)
         {
             col.enabled = true;
         }
+        else
+        {
+            Collider childCol = itemToDrop.GetComponentInChildren<Collider>();
+            if (childCol != null)
+            {
+                childCol.enabled = true;
+            }
+        }
 
-        Rigidbody rb = heldItem.GetComponent<Rigidbody>();
+        Rigidbody rb = itemToDrop.GetComponent<Rigidbody>();
         if (rb != null)
         {
             rb.isKinematic = false;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
         }
 
-        heldItem = null;
+        Debug.Log("Dropped: " + itemToDrop.name);
     }
 }
