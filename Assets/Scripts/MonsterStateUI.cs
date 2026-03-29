@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 ///   1 = Follow Player
 ///   2 = Go To Location A
 ///   3 = Go To Location B
+/// Also allows external scripts to set the same state.
 /// </summary>
 public class MonsterStateUI : MonoBehaviour
 {
@@ -27,12 +28,40 @@ public class MonsterStateUI : MonoBehaviour
     void Update()
     {
         if (monster == null) return;
+        if (Keyboard.current == null) return;
 
         if (Keyboard.current.digit1Key.wasPressedThisFrame)
-            monster.SetState(MonsterState.FollowPlayer);
+            SetAction("1");
         else if (Keyboard.current.digit2Key.wasPressedThisFrame)
-            monster.SetState(MonsterState.GoToLocationA);
+            SetAction("2");
         else if (Keyboard.current.digit3Key.wasPressedThisFrame)
-            monster.SetState(MonsterState.GoToLocationB);
+            SetAction("3");
+    }
+
+    public void SetAction(string action)
+    {
+        if (monster == null) return;
+
+        switch (action)
+        {
+            case "1":
+                monster.SetState(MonsterState.FollowPlayer);
+                Debug.Log("Monster action set to: FollowPlayer");
+                break;
+
+            case "2":
+                monster.SetState(MonsterState.GoToLocationA);
+                Debug.Log("Monster action set to: GoToLocationA");
+                break;
+
+            case "3":
+                monster.SetState(MonsterState.GoToLocationB);
+                Debug.Log("Monster action set to: GoToLocationB");
+                break;
+
+            default:
+                Debug.LogWarning("Unknown action: " + action);
+                break;
+        }
     }
 }
