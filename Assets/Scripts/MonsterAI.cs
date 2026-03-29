@@ -12,12 +12,6 @@ public class MonsterAI : MonoBehaviour
     [Tooltip("The player's Transform. If left empty, will auto-find by 'Player' tag.")]
     public Transform playerTarget;
 
-    [Tooltip("How fast the monster moves when chasing.")]
-    public float chaseSpeed = 3.5f;
-
-    [Tooltip("Monster stops this close to the player (so it doesn't clip inside them).")]
-    public float stoppingDistance = 1.5f;
-
     [Tooltip("How far away the monster can detect the player and start chasing.")]
     public float detectionRange = 20f;
 
@@ -26,8 +20,8 @@ public class MonsterAI : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        agent.speed = chaseSpeed;
-        agent.stoppingDistance = stoppingDistance;
+        // Speed, stopping distance, angular speed, and acceleration are set
+        // directly on the NavMeshAgent component in the Inspector.
 
         // Auto-find player if not assigned in Inspector
         if (playerTarget == null)
@@ -52,12 +46,19 @@ public class MonsterAI : MonoBehaviour
 
         if (distanceToPlayer <= detectionRange)
         {
-            agent.SetDestination(playerTarget.position);
+            if (distanceToPlayer > agent.stoppingDistance)
+            {
+                agent.isStopped = false;
+                agent.SetDestination(playerTarget.position);
+            }
+            else
+            {
+                agent.isStopped = true;
+            }
         }
         else
         {
-            // Stop moving if player is out of range
-            agent.ResetPath();
+            agent.isStopped = true;
         }
     }
 
@@ -67,7 +68,11 @@ public class MonsterAI : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
 
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, stoppingDistance);
+        NavMeshAgent a = GetComponent<NavMeshAgent>();
+        if (a != null)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, a.stoppingDistance);
+        }
     }
 }
