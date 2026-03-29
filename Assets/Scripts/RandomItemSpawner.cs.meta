@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 713fc17b5b9fc41538f14a903fc1371d
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - StonePrefab: {fileID: 6127907894846526173, guid: df3231a47ef74476aaf8d5416abf150f, type: 3}
+  - MarblePrefab: {fileID: 3423701552856810406, guid: a72c8ad6b57284010988a44dd6b8a0b4, type: 3}
+  - CampStonePrefab: {fileID: 8744277883351519846, guid: c571eb8a980d444639920e05c749143d, type: 3}
+  - CampMarblePrefab: {fileID: 1033114295546473795, guid: 966e2161136904c8cb4a9069f8b6511b, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
