@@ -78,6 +78,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100000, guid: c4534353dff9c6c468c490e0560f8f91, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2148241478908637761}
+    - targetCorrespondingSourceObject: {fileID: 100000, guid: c4534353dff9c6c468c490e0560f8f91, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3145822956077692492}
   m_SourcePrefab: {fileID: 100100000, guid: c4534353dff9c6c468c490e0560f8f91, type: 3}
 --- !u!1 &3423701552856810406 stripped
 GameObject:
@@ -124,3 +127,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PickupItem
   itemType: 1
+--- !u!114 &3145822956077692492
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3423701552856810406}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd9e8debaec814f98a8eefcf4578dd11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CollectibleItem
+  itemType: Marble
+  itemId: 2
