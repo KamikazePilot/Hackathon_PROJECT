@@ -7,6 +7,12 @@ public class PlayerPickup : MonoBehaviour
     public float pickupRange = 3f;
 
     private PickupItem heldItem;
+    private PlayerActionLogger logger;
+
+    void Start()
+    {
+        logger = FindFirstObjectByType<PlayerActionLogger>();
+    }
 
     void Update()
     {
@@ -48,7 +54,6 @@ public class PlayerPickup : MonoBehaviour
         {
             Debug.Log("Raycast hit: " + hit.collider.name);
 
-            // IMPORTANT: look on the hit object AND its parent
             PickupItem item = hit.collider.GetComponent<PickupItem>();
 
             if (item == null)
@@ -79,7 +84,6 @@ public class PlayerPickup : MonoBehaviour
             }
             else
             {
-                // If collider is on a child instead of the root
                 Collider childCol = heldItem.GetComponentInChildren<Collider>();
                 if (childCol != null)
                 {
@@ -92,6 +96,11 @@ public class PlayerPickup : MonoBehaviour
             heldItem.transform.localRotation = Quaternion.identity;
 
             Debug.Log("Picked up: " + heldItem.name);
+
+            if (logger != null)
+            {
+                logger.LogPickup(heldItem.itemType.ToString(), heldItem.name);
+            }
         }
         else
         {
@@ -134,5 +143,18 @@ public class PlayerPickup : MonoBehaviour
         }
 
         Debug.Log("Dropped: " + itemToDrop.name);
+
+        if (logger != null)
+        {
+            logger.LogDrop(itemToDrop.itemType.ToString(), itemToDrop.name);
+        }
+    }
+
+    public string GetHeldItemType()
+    {
+        if (heldItem == null)
+            return "None";
+
+        return heldItem.itemType.ToString();
     }
 }

@@ -3,64 +3,151 @@ using UnityEngine;
 
 public class PlayerActionLogger : MonoBehaviour
 {
-    public static PlayerActionLogger Instance;
+    public Transform player;
+    public Transform monster;
+
+    public float movementLogInterval = 2f;
+
+    private float movementTimer;
 
     private string filePath;
 
-    private void Awake()
+    void Start()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        filePath = Path.Combine(Application.persistentDataPath, "game_log.csv");
 
-        filePath = Path.Combine(Application.persistentDataPath, "player_action_log.csv");
+        Debug.Log("CSV Path: " + filePath);
 
         if (!File.Exists(filePath))
         {
             File.WriteAllText(filePath,
-                "timestamp,frame,action,player_x,player_y,player_z,item_type,item_id,held_item,extra\n");
+                "timestamp,action,player_x,player_z,monster_x,monster_z,held_item,item_type,item_id,notes\n"
+            );
         }
-
-        Debug.Log("CSV saved at: " + filePath);
     }
 
-    public void LogAction(
-        string action,
-        Vector3 playerPosition,
-        string itemType = "",
-        string itemId = "",
-        string heldItem = "",
-        string extra = "")
+    void Update()
     {
-        string timestamp = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+        movementTimer += Time.deltaTime;
 
+        if (movementTimer >= movementLogInterval)
+        {
+            movementTimer = 0f;
+
+            LogMovement();
+        }
+    }
+
+    void LogMovement()
+    {
+        Vector3 p = player.position;
+        Vector3 m = monster.position;
+
+        WriteRow(
+            Time.time,
+            "Move",
+            p.x,
+            p.z,
+            m.x,
+            m.z,
+            GetHeldItem(),
+            "",
+            "",
+            ""
+        );
+    }
+
+    public void LogPickup(string itemType, string itemId)
+    {
+        Vector3 p = player.position;
+        Vector3 m = monster.position;
+
+        WriteRow(
+            Time.time,
+            "Pickup",
+            p.x,
+            p.z,
+            m.x,
+            m.z,
+            itemType,
+            itemType,
+            itemId,
+            ""
+        );
+    }
+
+    public void LogDrop(string itemType, string itemId)
+    {
+        Vector3 p = player.position;
+        Vector3 m = monster.position;
+
+        WriteRow(
+            Time.time,
+            "Drop",
+            p.x,
+            p.z,
+            m.x,
+            m.z,
+            "None",
+            itemType,
+            itemId,
+            ""
+        );
+    }
+
+    public void LogDeposit(string itemType, string zoneName)
+    {
+        Vector3 p = player.position;
+        Vector3 m = monster.position;
+
+        WriteRow(
+            Time.time,
+            "Deposit",
+            p.x,
+            p.z,
+            m.x,
+            m.z,
+            "None",
+            itemType,
+            "",
+            zoneName
+        );
+    }
+
+    void WriteRow(
+        float timestamp,
+        string action,
+        float px,
+        float pz,
+        float mx,
+        float mz,
+        string heldItem,
+        string itemType,
+        string itemId,
+        string notes
+    )
+    {
         string row =
-            $"{Escape(timestamp)}," +
-            $"{Time.frameCount}," +
-            $"{Escape(action)}," +
-            $"{playerPosition.x:F2}," +
-            $"{playerPosition.y:F2}," +
-            $"{playerPosition.z:F2}," +
-            $"{Escape(itemType)}," +
-            $"{Escape(itemId)}," +
-            $"{Escape(heldItem)}," +
-            $"{Escape(extra)}\n";
+            timestamp + "," +
+            action + "," +
+            px + "," +
+            pz + "," +
+            mx + "," +
+            mz + "," +
+            heldItem + "," +
+            itemType + "," +
+            itemId + "," +
+            notes + "\n";
 
         File.AppendAllText(filePath, row);
     }
 
-    private string Escape(string value)
+    string GetHeldItem()
     {
-        if (string.IsNullOrEmpty(value))
-            return "";
+        PlayerPickup pickup = player.GetComponent<PlayerPickup>();
 
-        value = value.Replace("\"", "\"\"");
-        return $"\"{value}\"";
+        if (pickup == null) return "None";
+
+        return pickup.GetHeldItemType();
     }
 }
